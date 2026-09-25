@@ -66,7 +66,7 @@ window.VISAS = {
     details: [
       "Vale para França, Alemanha, Bélgica, Holanda, Portugal, Espanha e demais países Schengen.",
       "O sistema EES registra biometria (digitais + foto) na primeira entrada.",
-      "O ETIAS (autorização eletrônica, parecida com a ETA britânica) está previsto para começar no fim de 2026 — confira se já é exigido na data da sua viagem.",
+      "O ETIAS (autorização eletrônica, parecida com a ETA britânica) estava previsto para o fim de 2026, mas deve atrasar para 2027 — confira se já é exigido na data da sua viagem.",
       "Podem pedir seguro-viagem, reserva de hospedagem e comprovante de dinheiro."
     ],
     link: "https://travel-europe.europa.eu/etias_en"
@@ -82,22 +82,61 @@ window.VISAS = {
   },
   CN: {
     country: "China", flag: "🇨🇳", status: "livre",
-    summary: "Isenção de visto para brasileiros (até 30 dias) — programa temporário, confirme se está vigente.",
+    summary: "Sem visto por até 30 dias — isenção temporária válida até 31/12/2026.",
     details: [
-      "Desde junho de 2025 a China isenta brasileiros de visto por até 30 dias (turismo, negócios, visita).",
-      "É um programa com prazo definido que vem sendo prorrogado: verifique no consulado antes de comprar passagem.",
+      "Desde junho de 2025 a China isenta brasileiros de visto por até 30 dias (turismo, negócios, visita à família).",
+      "A isenção foi prorrogada até 31 de dezembro de 2026. Para viagens depois disso, confira se houve nova prorrogação.",
       "Se não estiver vigente, é preciso visto de turista (L)."
     ],
     link: "http://br.china-embassy.gov.cn/por/"
   },
   MN: {
-    country: "Mongólia", flag: "🇲🇳", status: "visto",
-    summary: "Em geral é preciso visto (há e-visa). Regras mudaram nos últimos anos — confirme.",
+    country: "Mongólia", flag: "🇲🇳", status: "livre",
+    summary: "Sem visto por até 90 dias (acordo Brasil–Mongólia).",
     details: [
-      "A Mongólia oferece visto eletrônico (e-visa) para turismo.",
-      "Houve isenções temporárias para alguns países; verifique se o Brasil está incluído na época da viagem."
+      "Leve passaporte válido, reserva de voo e comprovante de hospedagem.",
+      "Ficando mais de 30 dias, é obrigatório se registrar na Agência de Imigração nos primeiros 7 dias."
     ],
-    link: "https://evisa.mn/"
+    link: "https://www.gov.br/mre/pt-br/assuntos/portal-consular"
+  },
+  KR: {
+    country: "Coreia do Sul", flag: "🇰🇷", status: "eletronico",
+    summary: "Sem visto, mas precisa da K-ETA (autorização eletrônica) antes de embarcar.",
+    details: [
+      "Turismo por até 90 dias.",
+      "A K-ETA é pedida online, vale 3 anos e sai em até 72 h — peça com uma semana de antecedência.",
+      "A isenção temporária de K-ETA que a Coreia dá a alguns países NÃO inclui o Brasil."
+    ],
+    link: "https://www.k-eta.go.kr/"
+  },
+  TH: {
+    country: "Tailândia", flag: "🇹🇭", status: "livre",
+    summary: "Sem visto para turismo (acordo bilateral). Preencha o cartão digital TDAC antes de chegar.",
+    details: [
+      "O acordo Brasil–Tailândia prevê até 90 dias; algumas fontes citam 60 dias na prática — confira na chegada.",
+      "O TDAC (Thailand Digital Arrival Card) é obrigatório e deve ser preenchido online até 3 dias antes.",
+      "Passaporte com pelo menos 6 meses de validade."
+    ],
+    link: "https://www.gov.br/mre/pt-br/embaixada-bangkok"
+  },
+  AE: {
+    country: "Emirados Árabes Unidos", flag: "🇦🇪", status: "livre",
+    summary: "Sem visto prévio: o visto de turista é carimbado de graça na chegada (até 90 dias).",
+    details: [
+      "Passaporte com pelo menos 6 meses de validade.",
+      "Podem pedir passagem de volta, reserva de hotel e seguro-viagem."
+    ],
+    link: "https://www.gov.br/mre/pt-br/assuntos/portal-consular"
+  },
+  BO: {
+    country: "Bolívia", flag: "🇧🇴", status: "livre",
+    summary: "Sem visto. Dá pra entrar só com o RG (acordo do Mercosul).",
+    details: [
+      "Estadia de até 90 dias como turista.",
+      "Aceita passaporte ou RG em bom estado. CNH não vale.",
+      "Sucre fica a ~2.800 m de altitude: vá com calma nos primeiros dias."
+    ],
+    link: "https://www.gov.br/mre/pt-br/assuntos/portal-consular"
   },
   AU: {
     country: "Austrália", flag: "🇦🇺", status: "visto",

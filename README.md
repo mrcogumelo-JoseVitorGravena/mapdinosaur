@@ -28,7 +28,7 @@ python3 -m http.server 8000
 
 Os dados ficam em arquivos simples:
 
-- `data/museums.js`: museus (nome, coordenadas, dinossauros, descrição, site)
+- `data/museums.js`: museus (nome, coordenadas, dinossauros, descrição, site e, opcionalmente, `maps`: o nome exato para buscar no Google Maps)
 - `data/visas.js`: regras de entrada para brasileiros por país
 
 Para adicionar um museu, copie um bloco em `museums.js` e ajuste os campos. Se o país for novo, adicione a regra de visto em `visas.js`.

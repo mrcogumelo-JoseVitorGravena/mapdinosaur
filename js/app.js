@@ -10,6 +10,8 @@
     visto: { text: "Visto obrigatório", color: "var(--red)" }
   };
   var REGIONS = ["Américas", "Europa", "Ásia", "Oceania"];
+  // Siglas usadas nas cidades brasileiras ("Monte Alto, SP"), para a busca achar pelo nome do estado
+  var UF = { SP: "São Paulo", MG: "Minas Gerais", RS: "Rio Grande do Sul", SC: "Santa Catarina", CE: "Ceará", PB: "Paraíba" };
 
   var state = { query: "", dino: null, region: null, visa: null, legendary: false, activeId: null };
   var markers = {};
@@ -83,7 +85,8 @@
     if (state.dino && !m.dinos.some(function (d) { return baseDino(d) === state.dino; })) return false;
     if (state.query) {
       var q = norm(state.query);
-      var hay = norm([m.name, m.city, visaOf(m).country, m.dinos.join(" ")].join(" "));
+      var uf = m.country === "BR" && UF[m.city.slice(-2)] || "";
+      var hay = norm([m.name, m.city, uf, visaOf(m).country, m.dinos.join(" ")].join(" "));
       if (hay.indexOf(q) === -1) return false;
     }
     return true;
@@ -174,7 +177,9 @@
 
   function renderDetail(m) {
     var v = visaOf(m);
-    var mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + m.lat + "," + m.lng;
+    // Busca pelo nome abre o card do lugar no Google Maps (coordenadas soltas nem sempre caem no museu)
+    var mapsQuery = m.maps || (m.name + ", " + m.city);
+    var mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mapsQuery);
     var html =
       '<div class="d-hero">' +
         (m.legendary ? '<span class="d-badge">★ Nível lendário</span>' : "") +
@@ -196,7 +201,7 @@
       "</div>" +
       '<div class="d-actions">' +
         (m.website ? '<a class="btn primary" href="' + m.website + '" target="_blank" rel="noopener">Site do museu ↗</a>' : "") +
-        '<a class="btn ' + (m.website ? "ghost" : "primary") + '" href="' + mapsUrl + '" target="_blank" rel="noopener">Como chegar ↗</a>' +
+        '<a class="btn ' + (m.website ? "ghost" : "primary") + '" href="' + mapsUrl + '" target="_blank" rel="noopener">Ver no Google Maps ↗</a>' +
       "</div>";
 
     var content = $("#detail-content");
