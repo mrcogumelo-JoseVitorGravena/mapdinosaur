@@ -5,6 +5,7 @@
 - 🗺️ Mapa escuro com pinos animados. Os ★ dourados são os museus de **nível lendário**
 - 🔎 Busca por dinossauro, museu ou cidade (ex.: `Triceratops` mostra Washington, Nova York, Melbourne, Tóquio…)
 - 🦴 Filtros por dinossauro, região e tipo de visto
+- 🖼️ Clique num dinossauro para ver imagem e resumo (via Wikipédia)
 - 🛂 Ficha de visto por país: sem visto, autorização eletrônica ou visto obrigatório, com link oficial
 - 📱 Funciona no celular
 
@@ -30,6 +31,7 @@ Os dados ficam em arquivos simples:
 
 - `data/museums.js`: museus (nome, coordenadas, dinossauros, descrição, site e, opcionalmente, `maps`: o nome exato para buscar no Google Maps)
 - `data/visas.js`: regras de entrada para brasileiros por país
+- `data/wiki.js`: qual artigo da Wikipédia usar para a imagem de cada dinossauro (quando o nome não bate direto)
 
 Para adicionar um museu, copie um bloco em `museums.js` e ajuste os campos. Se o país for novo, adicione a regra de visto em `visas.js`.
 

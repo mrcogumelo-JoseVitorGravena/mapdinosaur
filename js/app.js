@@ -188,7 +188,10 @@
       "</div>" +
       '<p class="d-desc">' + esc(m.description) + "</p>" +
       '<div class="d-section"><h4>O que tem por lá</h4><div class="d-dinos">' +
-        m.dinos.map(function (d) { return '<button class="d-dino" data-dino="' + esc(baseDino(d)) + '">' + esc(d) + "</button>"; }).join("") +
+        m.dinos.map(function (d) {
+          var b = baseDino(d);
+          return '<button class="d-dino' + (wikiFor(b) ? " has-card" : "") + '" data-dino="' + esc(b) + '">' + esc(d) + "</button>";
+        }).join("") +
       "</div></div>" +
       '<div class="d-section"><h4>🛂 Entrada com passaporte brasileiro</h4>' +
         '<div class="visa-card ' + v.status + '">' +
@@ -238,6 +241,84 @@
     render();
   }
 
+  // ───────── Ficha do dinossauro (imagem e resumo da Wikipédia) ─────────
+  var wikiCache = {};
+  // Só aceita o artigo se ele falar de fóssil/bicho pré-histórico (evita homônimos)
+  var PALEO = /dinossaur|dinosaur|f[óo]ssil|fossil|extint|extinct|pr[ée]-hist|prehistoric|pterossaur|pterosaur|r[ée]ptil|reptile|crocodil|cret[áa]ceo|cretaceous|jur[áa]ssico|jurassic|tri[áa]ssico|triassic|mamute|mammoth|pregui[çc]a|sloth|petrific|icno|trace|track|ovo|egg/i;
+
+  function wikiFor(name) {
+    if (name in window.DINO_WIKI) return window.DINO_WIKI[name];
+    return { pt: name, en: name };
+  }
+
+  function fetchSummary(lang, title) {
+    if (!title) return Promise.resolve(null);
+    var url = "https://" + lang + ".wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(title.replace(/ /g, "_"));
+    return fetch(url).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (!j || j.type === "disambiguation" || !PALEO.test(j.extract || "")) return null;
+      return {
+        text: j.extract,
+        img: (j.originalimage || j.thumbnail || {}).source || null,
+        thumb: (j.thumbnail || {}).source || null,
+        url: j.content_urls && j.content_urls.desktop.page
+      };
+    }).catch(function () { return null; });
+  }
+
+  function loadDino(name) {
+    if (wikiCache[name]) return wikiCache[name];
+    var w = wikiFor(name);
+    wikiCache[name] = Promise.all([fetchSummary("pt", w.pt), fetchSummary("en", w.en)]).then(function (r) {
+      var pt = r[0], en = r[1], main = pt || en;
+      if (!main) return null;
+      // Texto em português quando existe; imagem de onde tiver
+      var img = (pt && pt.img) || (en && en.img);
+      var thumb = (pt && pt.thumb) || (en && en.thumb);
+      return { text: main.text, lang: pt ? "pt" : "en", img: img, thumb: thumb, url: main.url };
+    });
+    return wikiCache[name];
+  }
+
+  function openDino(name) {
+    var modal = $("#dino-modal"), imgBox = $(".dm-img"), img = $("#dm-img"), text = $("#dm-text");
+    var count = MUSEUMS.filter(function (m) { return m.dinos.some(function (d) { return baseDino(d) === name; }); }).length;
+    modal.hidden = false;
+    $("#dm-title").textContent = name;
+    text.textContent = "Desenterrando informações…";
+    text.classList.add("loading");
+    img.classList.remove("loaded"); img.removeAttribute("src"); img.alt = name;
+    imgBox.classList.remove("done", "empty");
+    $("#dm-wiki").hidden = true;
+    var filter = $("#dm-filter");
+    filter.dataset.dino = name;
+    filter.textContent = count > 1 ? "Ver os " + count + " museus com " + name : "Ver no mapa";
+
+    loadDino(name).then(function (info) {
+      if ($("#dm-title").textContent !== name) return; // usuário já abriu outro
+      text.classList.remove("loading");
+      if (!info) {
+        text.textContent = "Não encontrei imagem nem resumo desse aqui. Mas ele está no museu, pode confiar! 🦖";
+        imgBox.classList.add("done", "empty");
+        return;
+      }
+      var t = info.text.length > 420 ? info.text.slice(0, 420).replace(/\s+\S*$/, "") + "…" : info.text;
+      text.textContent = t + (info.lang === "en" ? " (resumo em inglês)" : "");
+      var a = $("#dm-wiki"); a.href = info.url; a.hidden = !info.url;
+      if (!info.img) { imgBox.classList.add("done", "empty"); return; }
+      img.onload = function () { img.classList.add("loaded"); imgBox.classList.add("done"); };
+      img.onerror = function () {
+        if (info.thumb && img.src !== info.thumb) { img.src = info.thumb; return; }
+        imgBox.classList.add("done", "empty");
+      };
+      img.src = info.img;
+    });
+  }
+
+  function closeDino() {
+    $("#dm-title").textContent = "";
+    $("#dino-modal").hidden = true;
+  }
+
   // ───────── Contadores animados ─────────
   function animateCounters() {
     var species = {};
@@ -272,20 +353,29 @@
   $("#museum-list").addEventListener("click", function (e) { var li = e.target.closest("[data-id]"); if (li) select(li.dataset.id); });
   $("#close-detail").addEventListener("click", closeDetail);
   $("#detail").addEventListener("transitionend", function () { if (!this.classList.contains("open")) this.hidden = true; });
+  function filterByDino(dino) {
+    state.dino = dino; state.query = ""; $("#search").value = "";
+    $("#sidebar").classList.remove("collapsed"); $("#open-sidebar").classList.remove("show");
+    closeDetail(); renderChips(); render(true);
+  }
   $("#detail-content").addEventListener("click", function (e) {
     var b = e.target.closest("[data-dino]");
     if (!b) return;
-    state.dino = b.dataset.dino; state.query = ""; $("#search").value = "";
-    $("#sidebar").classList.remove("collapsed"); $("#open-sidebar").classList.remove("show");
-    closeDetail(); renderChips(); render(true);
+    if (wikiFor(b.dataset.dino)) openDino(b.dataset.dino);
+    else filterByDino(b.dataset.dino);
   });
+  $("#dino-modal").addEventListener("click", function (e) { if (e.target.closest("[data-close]")) closeDino(); });
+  $("#dm-filter").addEventListener("click", function () { var d = this.dataset.dino; closeDino(); filterByDino(d); });
   $("#toggle-sidebar").addEventListener("click", function () {
     $("#sidebar").classList.add("collapsed"); $("#open-sidebar").classList.add("show");
   });
   $("#open-sidebar").addEventListener("click", function () {
     $("#sidebar").classList.remove("collapsed"); this.classList.remove("show");
   });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDetail(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (!$("#dino-modal").hidden) closeDino(); else closeDetail();
+  });
 
   // ───────── Início ─────────
   createMarkers();

@@ -80,9 +80,29 @@
     <div id="detail-content"></div>
   </section>
 
+  <!-- Ficha do dinossauro -->
+  <div id="dino-modal" hidden>
+    <div class="dm-backdrop" data-close></div>
+    <article class="dm-card glass" role="dialog" aria-modal="true" aria-labelledby="dm-title">
+      <button class="icon-btn dm-close" data-close aria-label="Fechar">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="dm-img"><img id="dm-img" alt=""><span class="dm-noimg">🦴</span></div>
+      <div class="dm-body">
+        <h2 id="dm-title"></h2>
+        <p id="dm-text" class="dm-text"></p>
+        <div class="dm-actions">
+          <button id="dm-filter" class="btn primary"></button>
+          <a id="dm-wiki" class="btn ghost" target="_blank" rel="noopener">Wikipédia ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="data/visas.js"></script>
   <script src="data/museums.js"></script>
+  <script src="data/wiki.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
