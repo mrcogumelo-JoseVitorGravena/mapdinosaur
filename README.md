@@ -37,4 +37,4 @@ Para adicionar um museu, copie um bloco em `museums.js` e ajuste os campos. Se o
 
 ## Tecnologias
 
-[Leaflet](https://leafletjs.com/) · tiles escuros da [CARTO](https://carto.com/) / [OpenStreetMap](https://www.openstreetmap.org/) · HTML, CSS e JS puros
+[Leaflet](https://leafletjs.com/) · tiles escuros da [Esri](https://www.esri.com/) (com [OpenStreetMap](https://www.openstreetmap.org/) como plano B) · HTML, CSS e JS puros

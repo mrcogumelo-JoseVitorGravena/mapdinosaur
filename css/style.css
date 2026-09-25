@@ -64,6 +64,8 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 /* ───────── Mapa ───────── */
 #map { position: fixed; inset: 0; background: var(--bg); }
 .leaflet-container { font-family: inherit; }
+/* Plano B: OpenStreetMap "pintado" de escuro */
+.osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.35); }
 .leaflet-control-attribution { background: rgba(0, 0, 0, .55) !important; color: var(--muted) !important; font-size: 10px; }
 .leaflet-control-attribution a { color: var(--amber) !important; }
 .leaflet-control-zoom { border: 1px solid var(--border) !important; border-radius: 12px !important; overflow: hidden; box-shadow: var(--shadow) !important; }

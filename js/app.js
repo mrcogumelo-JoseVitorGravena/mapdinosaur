@@ -32,10 +32,28 @@
     zoomControl: false, worldCopyJump: true
   });
   L.control.zoom({ position: "topright" }).addTo(map);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd", maxZoom: 19
+  // Mapa de fundo: Esri Dark Gray (não precisa de chave de API).
+  // Se os tiles falharem, cai para o OpenStreetMap escurecido via CSS.
+  var ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+  var base = L.tileLayer(ESRI + "World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap",
+    maxZoom: 16
   }).addTo(map);
+  var labels = L.tileLayer(ESRI + "World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 16, pane: "overlayPane"
+  }).addTo(map);
+
+  var loaded = false, errors = 0;
+  base.on("tileload", function () { loaded = true; });
+  base.on("tileerror", function () {
+    if (loaded || ++errors < 4) return;
+    map.removeLayer(base);
+    map.removeLayer(labels);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      className: "osm-dark", maxZoom: 19
+    }).addTo(map);
+  });
 
   function createMarkers() {
     // Anima os pinos caindo de oeste para leste
