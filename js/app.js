@@ -352,6 +352,8 @@
   $("#only-legendary").addEventListener("change", function (e) { state.legendary = e.target.checked; render(true); });
   $("#museum-list").addEventListener("click", function (e) { var li = e.target.closest("[data-id]"); if (li) select(li.dataset.id); });
   $("#close-detail").addEventListener("click", closeDetail);
+  // Clicar numa área vazia do mapa desmarca o museu (clique em pino não chega aqui)
+  map.on("click", function () { if (state.activeId) closeDetail(); });
   $("#detail").addEventListener("transitionend", function () { if (!this.classList.contains("open")) this.hidden = true; });
   function filterByDino(dino) {
     state.dino = dino; state.query = ""; $("#search").value = "";
